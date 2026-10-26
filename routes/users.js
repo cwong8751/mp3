@@ -7,7 +7,10 @@ module.exports = function (router) {
     userRouter.get(async function (req, res) {
         try {
             const users = await User.find();
-            res.json(users);
+            res.json({
+                message: "here is a list of users",
+                data: users
+            });
         }
         catch (err) {
             res.status(500).json(
@@ -38,7 +41,7 @@ module.exports = function (router) {
 
             const result = await newUser.save();
 
-            res.status(200).json({
+            res.status(201).json({
                 message: "Successfully created user",
                 data: result
             });
@@ -85,6 +88,7 @@ module.exports = function (router) {
         }
     });
 
+    // replace entire user with supplied user 
     idRoutes.put(async function (req, res) {
         try {
             const userId = req.params.id;
@@ -114,6 +118,7 @@ module.exports = function (router) {
         }
     });
 
+    // delete user with specified user 
     idRoutes.delete(async function (req, res) {
         try {
             const userId = req.params.id;
