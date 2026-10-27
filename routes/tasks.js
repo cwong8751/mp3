@@ -155,30 +155,28 @@ module.exports = function (router) {
 
             const updateTask = await Task.findByIdAndUpdate(taskId, newTask, { new: true });
 
-            // two way reference 
-            // https://www.mongodb.com/docs/manual/reference/operator/update/addtoset/
-            if (updateTask.assignedUser !== null) {
-                await User.findByIdAndUpdate(updateTask.assignedUser, { $addToSet: { pendingTasks: taskId } });
-            }
-
             if (!updateTask) {
                 return res.status(404).json({
                     message: "did not find task to update",
                     data: []
                 });
             }
-            else {
 
-                // remove task from pending task list 
-                if (updateTask.completed) {
-                    await User.findByIdAndUpdate(updateTask.assignedUser, { $pull: { pendingTasks: taskId } });
-                }
-
-                return res.status(200).json({
-                    message: "Successfully updated task",
-                    data: updateTask
-                });
+            // remove task from pending task list 
+            if (updateTask.completed) {
+                await User.findByIdAndUpdate(updateTask.assignedUser, { $pull: { pendingTasks: taskId } });
             }
+
+            // two way reference 
+            // https://www.mongodb.com/docs/manual/reference/operator/update/addtoset/
+            if (updateTask.assignedUser !== null) {
+                await User.findByIdAndUpdate(updateTask.assignedUser, { $addToSet: { pendingTasks: taskId } });
+            }
+
+            return res.status(200).json({
+                message: "Successfully updated task",
+                data: updateTask
+            });
 
         }
         catch (err) {
