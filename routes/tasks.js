@@ -25,11 +25,18 @@ module.exports = function (router) {
         try {
             const name = req.body.name;
             const description = req.body.description;
-            const deadline = req.body.date;
+            const deadline = req.body.deadline;
             const completed = req.body.completed;
             const assignedUser = req.body.assignedUser || "";
             const assignedUserName = req.body.assignedUserName || "unassigned";
             const dateCreated = new Date();
+
+            if(!name || !description || !deadline) {
+                return res.status(400).json({
+                    message: "missing fields for new task",
+                    error: "missing fields for new task"
+                });
+            }
 
             const newTask = new Task(
                 {
@@ -65,7 +72,7 @@ module.exports = function (router) {
     // get task detail
     taskIdRoute.get(async function (req, res) {
         try {
-            const id = req.param.id;
+            const id = req.params.id;
 
             const results = await Task.findById(id);
 
@@ -111,7 +118,7 @@ module.exports = function (router) {
             else {
                 res.status(200).json({
                     message: "Successfully updated user",
-                    data: updateUser
+                    data: updateTask
                 });
             }
 
@@ -131,7 +138,7 @@ module.exports = function (router) {
         try {
             const taskId = req.params.id;
 
-            const results = Task.findByIdAndDelete(taskId);
+            const results = await Task.findByIdAndDelete(taskId);
 
             if (!results) {
                 res.status(404).json({
