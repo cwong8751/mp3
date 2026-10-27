@@ -31,7 +31,7 @@ module.exports = function (router) {
             const assignedUserName = req.body.assignedUserName || "unassigned";
             const dateCreated = new Date();
 
-            if(!name || !description || !deadline) {
+            if (!name || !description || !deadline) {
                 return res.status(400).json({
                     message: "missing fields for new task",
                     error: "missing fields for new task"
@@ -74,7 +74,24 @@ module.exports = function (router) {
         try {
             const id = req.params.id;
 
-            const results = await Task.findById(id);
+            // chain queries
+            // https://mongoosejs.com/docs/api/query.html
+            const queryWhere = req.query.where;
+            const querySort = req.query.sort;
+            const querySelect = req.query.select;
+            const querySkip = req.query.skip;
+            const queryLimit = req.query.limit;
+            const queryCount = req.query.count;
+
+            if (queryCount) {
+                const countNum = await Task.countDocuments(queryWhere);
+                return res.json({
+                    message: "counted task documents according to where",
+                    data: countNum
+                });
+            }
+
+            const results = await Task.findById(id).sort(querySort).select(querySelect).skip(querySkip).limit(queryLimit);
 
             if (!results) {
                 return res.status(404).json(

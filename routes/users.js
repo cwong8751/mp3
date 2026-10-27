@@ -82,7 +82,24 @@ module.exports = function (router) {
         try {
             const id = req.params.id;
 
-            const results = await User.findById(id);
+            // chain queries
+            // https://mongoosejs.com/docs/api/query.html
+            const queryWhere = req.query.where;
+            const querySort = req.query.sort;
+            const querySelect = req.query.select;
+            const querySkip = req.query.skip;
+            const queryLimit = req.query.limit;
+            const queryCount = req.query.count;
+
+            if(queryCount) {
+                const countNum = await User.countDocuments(queryWhere);
+                return res.json({
+                    message: "counted user documents according to where",
+                    data: countNum
+                });
+            }
+
+            const results = await User.findById(id).sort(querySort).select(querySelect).skip(querySkip).limit(queryLimit);
 
             if (!results) {
                 res.status(404).json({
