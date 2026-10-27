@@ -10,17 +10,17 @@ module.exports = function (router) {
 
             // chain queries
             // https://mongoosejs.com/docs/api/query.html
-            var queryWhere = {};
-            var querySort = {};
-            var querySelect = {};
+            var queryWhere = req.query.where;
+            var querySort = req.query.sort;
+            var querySelect = req.query.select;
             var querySkip = 0;
             var queryLimit = 0;
             var queryCount = req.query.count;
 
             try {
-                if (queryWhere) { queryWhere = JSON.parse(req.query.where); }
-                if (querySort) { querySort = JSON.parse(req.query.sort); }
-                if (querySelect) { querySelect = JSON.parse(req.query.select); }
+                if (queryWhere) { queryWhere = JSON.parse(req.query.where); } else {queryWhere = {};}
+                if (querySort) { querySort = JSON.parse(req.query.sort); }else {queryWhere = {};}
+                if (querySelect) { querySelect = JSON.parse(req.query.select); }else {queryWhere = {};}
                 if (querySkip) { querySkip = parseInt(req.query.skip); }
                 if (queryLimit) { queryLimit = parseInt(req.query.limit); }
             }
