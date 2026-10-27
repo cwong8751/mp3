@@ -14,7 +14,7 @@ module.exports = function (router) {
             var querySort = req.query.sort;
             var querySelect = req.query.select;
             var querySkip = 0;
-            var queryLimit = 0;
+            var queryLimit = req.query.limit;
             var queryCount = req.query.count;
 
             try {
