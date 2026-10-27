@@ -80,7 +80,7 @@ module.exports = function (router) {
     // get a specific user according to id 
     idRoutes.get(async function (req, res) {
         try {
-            const id = req.param.id;
+            const id = req.params.id;
 
             const results = await User.findById(id);
 
@@ -114,6 +114,9 @@ module.exports = function (router) {
 
             const updateUser = await User.findByIdAndUpdate(userId, newUser, { new: true });
 
+            // claude helped me resolve this error 
+            // https://claude.ai/share/4738a288-424f-494e-af11-41df8106462f
+            // initially didnt add await to updateUser. 
             if (!updateUser) {
                 return res.status(404).json({
                     message: "did not find user to update",
@@ -149,10 +152,9 @@ module.exports = function (router) {
                     data: []
                 });
             } else {
-                return res.status(200).json({
-                    message: "Successfully deleted user",
-                    data: results
-                });
+                // claude helped me
+                // https://claude.ai/share/4738a288-424f-494e-af11-41df8106462f
+                return res.status(204).send();
             }
 
         } catch (err) {

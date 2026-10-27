@@ -146,10 +146,9 @@ module.exports = function (router) {
                     data: []
                 });
             } else {
-                return res.status(200).json({
-                    message: "successfully deleted task",
-                    data: results
-                });
+                // claude helped me
+                // https://claude.ai/share/4738a288-424f-494e-af11-41df8106462f
+                return res.status(204).send();
             }
 
         } catch (err) {
