@@ -107,7 +107,7 @@ module.exports = function (router) {
             const taskId = req.params.id;
             const newTask = req.body;
 
-            const updateTask = Task.findByIdAndUpdate(taskId, newTask, { new: true });
+            const updateTask = await Task.findByIdAndUpdate(taskId, newTask, { new: true });
 
             if (!updateTask) {
                 return res.status(404).json({

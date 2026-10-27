@@ -112,7 +112,7 @@ module.exports = function (router) {
             const userId = req.params.id;
             const newUser = req.body;
 
-            const updateUser = User.findByIdAndUpdate(userId, newUser, { new: true });
+            const updateUser = await User.findByIdAndUpdate(userId, newUser, { new: true });
 
             if (!updateUser) {
                 return res.status(404).json({
@@ -141,7 +141,7 @@ module.exports = function (router) {
         try {
             const userId = req.params.id;
 
-            const results = User.findByIdAndDelete(userId);
+            const results = await User.findByIdAndDelete(userId);
 
             if (!results) {
                 return res.status(404).json({
