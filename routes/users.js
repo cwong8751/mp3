@@ -97,30 +97,6 @@ module.exports = function (router) {
                 });
             }
 
-            // chain queries
-            // https://mongoosejs.com/docs/api/query.html
-            // var queryWhere = req.query.where;
-            // var querySort = req.query.sort;
-            // var querySelect = req.query.select;
-            // var querySkip = req.query.skip;
-            // var queryLimit = req.query.limit;
-            // var queryCount = req.query.count;
-
-
-            // if (queryWhere) { queryWhere = JSON.parse(req.query.where); } else { queryWhere = {}; }
-            // if (querySort) { querySort = JSON.parse(req.query.sort); } else { querySort = {}; }
-            // if (querySelect) { querySelect = JSON.parse(req.query.select); } else { querySelect = {}; }
-            // if (querySkip) { querySkip = parseInt(req.query.skip); } else { querySkip = 0; }
-            // if (queryLimit) { queryLimit = parseInt(req.query.limit); } else { queryLimit = 0; }
-
-            // if (queryCount) {
-            //     const countNum = await User.countDocuments(queryWhere);
-            //     return res.json({
-            //         message: "counted user documents according to where",
-            //         data: countNum
-            //     });
-            // }
-
             const results = await User.findById(id).select(querySelect);
 
             if (!results) {
