@@ -7,13 +7,13 @@ module.exports = function (router) {
     userRouter.get(async function (req, res) {
         try {
             const users = await User.find();
-            res.json({
+            return res.json({
                 message: "here is a list of users",
                 data: users
             });
         }
         catch (err) {
-            res.status(500).json(
+            return res.status(500).json(
                 {
                     message: "Failure to find users",
                     error: "Failure to find users"
@@ -30,7 +30,7 @@ module.exports = function (router) {
             const pendingTask = req.body.pendingTask || [];
             const dateCreated = new Date();
 
-            if(!name) {
+            if (!name) {
                 return res.status(400).json(
                     {
                         message: "name is required",
@@ -39,7 +39,7 @@ module.exports = function (router) {
                 )
             }
 
-            if(!email) {
+            if (!email) {
                 return res.status(400).json(
                     {
                         message: "name is required",
@@ -59,13 +59,13 @@ module.exports = function (router) {
 
             const result = await newUser.save();
 
-            res.status(201).json({
+            return res.status(201).json({
                 message: "Successfully created user",
                 data: result
             });
         }
         catch (err) {
-            res.status(500).json(
+            return res.status(500).json(
                 {
                     message: "Failed to create user",
                     error: "Failed to create user"
@@ -115,12 +115,12 @@ module.exports = function (router) {
             const updateUser = User.findByIdAndUpdate(userId, newUser, { new: true });
 
             if (!updateUser) {
-                res.status(404).json({
+                return res.status(404).json({
                     message: "did not find user to update",
                     data: []
                 });
             } else {
-                res.status(200).json({
+                return res.status(200).json({
                     message: "Successfully updated user",
                     data: updateUser
                 });
@@ -144,19 +144,19 @@ module.exports = function (router) {
             const results = User.findByIdAndDelete(userId);
 
             if (!results) {
-                res.status(404).json({
+                return res.status(404).json({
                     message: "did not find user to delete",
                     data: []
                 });
             } else {
-                res.status(200).json({
+                return res.status(200).json({
                     message: "Successfully deleted user",
                     data: results
                 });
             }
 
         } catch (err) {
-            res.status(500).json(
+            return res.status(500).json(
                 {
                     message: "Failed to delete user",
                     error: "Failed to delete user"

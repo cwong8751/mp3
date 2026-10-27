@@ -8,10 +8,10 @@ module.exports = function (router) {
     taskRouter.get(async function (req, res) {
         try {
             const tasks = await Task.find();
-            res.json({ message: "here is a list of tasks", data: tasks });
+            return res.json({ message: "here is a list of tasks", data: tasks });
         }
         catch (err) {
-            res.status(500).json(
+            return res.status(500).json(
                 {
                     message: "failed to get list of tasks",
                     error: "failed to get list of tasks"
@@ -52,13 +52,13 @@ module.exports = function (router) {
 
             const result = await newTask.save();
 
-            res.status(201).json({
+            return res.status(201).json({
                 message: "successfully created a new task",
                 data: result
             });
         }
         catch (err) {
-            res.status(500).json(
+            return res.status(500).json(
                 {
                     message: "failed to create a new task",
                     error: "failed to create a new task"
@@ -77,7 +77,7 @@ module.exports = function (router) {
             const results = await Task.findById(id);
 
             if (!results) {
-                res.status(404).json(
+                return res.status(404).json(
                     {
                         message: "task not found",
                         data: []
@@ -85,14 +85,14 @@ module.exports = function (router) {
                 );
             }
             else {
-                res.status(200).json({
+                return res.status(200).json({
                     message: "found task",
                     data: results
                 });
             }
         }
         catch (err) {
-            res.status(500).json(
+            return res.status(500).json(
                 {
                     message: "failed to get task",
                     error: "failed to get task"
@@ -110,13 +110,13 @@ module.exports = function (router) {
             const updateTask = Task.findByIdAndUpdate(taskId, newTask, { new: true });
 
             if (!updateTask) {
-                res.status(404).json({
+                return res.status(404).json({
                     message: "did not find user to update",
                     data: []
                 });
             }
             else {
-                res.status(200).json({
+                return res.status(200).json({
                     message: "Successfully updated user",
                     data: updateTask
                 });
@@ -124,7 +124,7 @@ module.exports = function (router) {
 
         }
         catch (err) {
-            res.status(500).json(
+            return res.status(500).json(
                 {
                     message: "Failed to update task",
                     error: "Failed to update task"
@@ -141,19 +141,19 @@ module.exports = function (router) {
             const results = await Task.findByIdAndDelete(taskId);
 
             if (!results) {
-                res.status(404).json({
+                return res.status(404).json({
                     message: "did not find task",
                     data: []
                 });
             } else {
-                res.status(200).json({
+                return res.status(200).json({
                     message: "successfully deleted task",
                     data: results
                 });
             }
 
         } catch (err) {
-            res.status(500).json(
+            return res.status(500).json(
                 {
                     message: "Failed to delete task",
                     error: "Failed to delete task"
