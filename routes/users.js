@@ -30,7 +30,25 @@ module.exports = function (router) {
             const pendingTask = req.body.pendingTask || [];
             const dateCreated = new Date();
 
-            const newUser = User(
+            if(!name) {
+                return res.status(400).json(
+                    {
+                        message: "name is required",
+                        error: "name is required"
+                    }
+                )
+            }
+
+            if(!email) {
+                return res.status(400).json(
+                    {
+                        message: "name is required",
+                        error: "name is required"
+                    }
+                )
+            }
+
+            const newUser = new User(
                 {
                     name: name,
                     email: email,
@@ -96,7 +114,7 @@ module.exports = function (router) {
 
             const updateUser = User.findByIdAndUpdate(userId, newUser, { new: true });
 
-            if (!results) {
+            if (!updateUser) {
                 res.status(404).json({
                     message: "did not find user to update",
                     data: []
