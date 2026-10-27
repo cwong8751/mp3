@@ -27,7 +27,7 @@ module.exports = function (router) {
         try {
             const name = req.body.name;
             const email = req.body.email;
-            const pendingTask = req.body.pendingTask || [];
+            const pendingTask = req.body.pendingTasks || [];
             const dateCreated = new Date();
 
             if (!name) {
@@ -52,7 +52,7 @@ module.exports = function (router) {
                 {
                     name: name,
                     email: email,
-                    pendingTask: pendingTask,
+                    pendingTasks: pendingTask,
                     dateCreated: dateCreated
                 }
             );
@@ -142,7 +142,7 @@ module.exports = function (router) {
                     data: "cant find user"
                 });
             }
-            
+
             res.status(500).json(
                 {
                     message: "Failed to get user information",
@@ -159,6 +159,13 @@ module.exports = function (router) {
             const newUser = req.body;
 
             const updateUser = await User.findByIdAndUpdate(userId, newUser, { new: true });
+
+            // two way reference 
+            // https://www.geeksforgeeks.org/mongodb/mongoose-updatemany-function/
+            if (newUser.pendingTasks !== null && newUser.pendingTasks.length > 0) {
+                await Task.updateMany({ _id: { $in: newUser.pendingTasks } },
+                    { assignedUser: userId, assignedUserName: updateUser.name });
+            }
 
             // claude helped me resolve this error 
             // https://claude.ai/share/4738a288-424f-494e-af11-41df8106462f

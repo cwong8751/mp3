@@ -155,6 +155,12 @@ module.exports = function (router) {
 
             const updateTask = await Task.findByIdAndUpdate(taskId, newTask, { new: true });
 
+            // two way reference 
+            // https://www.mongodb.com/docs/manual/reference/operator/update/addtoset/
+            if(updateTask.assignedUser !== null) {
+                await User.findByIdAndUpdate(updateTask.assignedUser, {$addToSet: { pendingTasks: taskId }});
+            }
+
             if (!updateTask) {
                 return res.status(404).json({
                     message: "did not find user to update",
