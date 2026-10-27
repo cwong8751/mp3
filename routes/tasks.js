@@ -19,8 +19,8 @@ module.exports = function (router) {
 
             try {
                 if (queryWhere) { queryWhere = JSON.parse(req.query.where); } else {queryWhere = {};}
-                if (querySort) { querySort = JSON.parse(req.query.sort); }else {queryWhere = {};}
-                if (querySelect) { querySelect = JSON.parse(req.query.select); }else {queryWhere = {};}
+                if (querySort) { querySort = JSON.parse(req.query.sort); }else {querySort = {};}
+                if (querySelect) { querySelect = JSON.parse(req.query.select); }else {querySelect = {};}
                 if (querySkip) { querySkip = parseInt(req.query.skip); }
                 if (queryLimit) { queryLimit = parseInt(req.query.limit); }
             }
