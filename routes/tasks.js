@@ -32,6 +32,8 @@ module.exports = function (router) {
             }
 
             if (queryCount) {
+                // count documents how to use 
+                // https://www.geeksforgeeks.org/mongodb/mongoose-countdocuments-function/
                 const countNum = await Task.countDocuments(queryWhere);
                 return res.json({
                     message: "counted task documents according to where",
@@ -64,6 +66,9 @@ module.exports = function (router) {
             const assignedUserName = req.body.assignedUserName || "unassigned";
             const dateCreated = new Date();
 
+            // field validation 
+            // claude helped me
+            // https://claude.ai/share/4738a288-424f-494e-af11-41df8106462f
             if (!name || !description || !deadline) {
                 return res.status(400).json({
                     message: "missing fields for new task",

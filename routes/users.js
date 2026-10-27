@@ -31,6 +31,9 @@ module.exports = function (router) {
             const pendingTask = req.body.pendingTasks || [];
             const dateCreated = new Date();
 
+            // claude helped me
+            // input validation 
+            // https://claude.ai/share/4738a288-424f-494e-af11-41df8106462f
             if (!name) {
                 return res.status(400).json(
                     {
