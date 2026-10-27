@@ -155,7 +155,7 @@ module.exports = function (router) {
 
             // check if user is found
             if(newTask.assignedUser) {
-                const queryUser = User.findById(newTask.assignedUser);
+                const queryUser = await User.findById(newTask.assignedUser);
 
                 // if there is no user, 404
                 if(!queryUser){
@@ -166,7 +166,7 @@ module.exports = function (router) {
                 }
 
                 // if the user is not the same
-                if(newTask.assignedUserName && newTask.assignedUserName !== user.name) {
+                if(newTask.assignedUserName && newTask.assignedUserName !== queryUser.name) {
                     return res.status(400).json({
                         message: "user is not the same as assigned",
                         data: "user is not the same as assigned"
