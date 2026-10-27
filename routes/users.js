@@ -91,7 +91,14 @@ module.exports = function (router) {
             const queryLimit = req.query.limit;
             const queryCount = req.query.count;
 
-            if(queryCount) {
+
+            if (queryWhere) { queryWhere = JSON.parse(req.query.where); } else { queryWhere = {}; }
+            if (querySort) { querySort = JSON.parse(req.query.sort); } else { querySort = {}; }
+            if (querySelect) { querySelect = JSON.parse(req.query.select); } else { querySelect = {}; }
+            if (querySkip) { querySkip = parseInt(req.query.skip); } else { querySkip = 0; }
+            if (queryLimit) { queryLimit = parseInt(req.query.limit); } else { queryLimit = 0; }
+
+            if (queryCount) {
                 const countNum = await User.countDocuments(queryWhere);
                 return res.json({
                     message: "counted user documents according to where",
