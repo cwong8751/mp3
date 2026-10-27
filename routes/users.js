@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var Task = require('../models/task');
 
 module.exports = function (router) {
     var userRouter = router.route('/users');
