@@ -112,7 +112,7 @@ module.exports = function (router) {
             //     });
             // }
 
-            const results = await Task.findById(id).sort(querySort).select(querySelect).skip(querySkip).limit(queryLimit);
+            const results = await Task.findById(id).select(querySelect);
 
             if (!results) {
                 return res.status(404).json(
@@ -130,6 +130,14 @@ module.exports = function (router) {
             }
         }
         catch (err) {
+
+            if(err.name === 'CastError') {
+                return res.status(404).json({
+                    message: "cant find user for task to get",
+                    data: "cant find user for task to get"
+                });
+            }
+
             return res.status(500).json(
                 {
                     message: "failed to get task",

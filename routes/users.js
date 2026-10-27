@@ -85,7 +85,7 @@ module.exports = function (router) {
             var querySelect = {};
 
             try {
-                if(req.query.select) {
+                if (req.query.select) {
                     querySelect = JSON.parse(req.query.select);
                 }
             }
@@ -120,7 +120,7 @@ module.exports = function (router) {
             //     });
             // }
 
-            const results = await User.findById(id).sort(querySort).select(querySelect).skip(querySkip).limit(queryLimit);
+            const results = await User.findById(id).select(querySelect);
 
             if (!results) {
                 res.status(404).json({
@@ -135,6 +135,14 @@ module.exports = function (router) {
             }
         }
         catch (err) {
+
+            if (err.name === 'CastError') {
+                return res.status(404).json({
+                    message: "cant find user",
+                    data: "cant find user"
+                });
+            }
+            
             res.status(500).json(
                 {
                     message: "Failed to get user information",
