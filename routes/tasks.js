@@ -153,6 +153,27 @@ module.exports = function (router) {
             const taskId = req.params.id;
             const newTask = req.body;
 
+            // check if user is found
+            if(newTask.assignedUser) {
+                const queryUser = User.findById(newTask.assignedUser);
+
+                // if there is no user, 404
+                if(!queryUser){
+                    return res.status(404).json({
+                        message: "user not found",
+                        data: "user not found"
+                    });
+                }
+
+                // if the user is not the same
+                if(newTask.assignedUserName && newTask.assignedUserName !== user.name) {
+                    return res.status(400).json({
+                        message: "user is not the same as assigned",
+                        data: "user is not the same as assigned"
+                    });
+                }
+            }
+
             const updateTask = await Task.findByIdAndUpdate(taskId, newTask, { new: true });
 
             if (!updateTask) {
@@ -163,13 +184,11 @@ module.exports = function (router) {
             }
 
             // remove task from pending task list 
-            if (updateTask.completed) {
-                await User.findByIdAndUpdate(updateTask.assignedUser, { $pull: { pendingTasks: taskId } });
-            }
-
             // two way reference 
             // https://www.mongodb.com/docs/manual/reference/operator/update/addtoset/
-            if (updateTask.assignedUser !== null) {
+            if (updateTask.completed) {
+                await User.findByIdAndUpdate(updateTask.assignedUser, { $pull: { pendingTasks: taskId } });
+            } else if (updateTask.assignedUser !== null) {
                 await User.findByIdAndUpdate(updateTask.assignedUser, { $addToSet: { pendingTasks: taskId } });
             }
 
