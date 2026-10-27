@@ -183,7 +183,7 @@ module.exports = function (router) {
         }
         catch (err) {
             // error for update non existent task id 
-            if (err === "CastError") {
+            if (err.name === "CastError") {
                 return res.status(404).json({
                     message: "did not find task to update",
                     data: "did not find task to update"
