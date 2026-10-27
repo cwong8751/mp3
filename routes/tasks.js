@@ -7,7 +7,40 @@ module.exports = function (router) {
     // get all tasks
     taskRouter.get(async function (req, res) {
         try {
-            const tasks = await Task.find();
+
+            // chain queries
+            // https://mongoosejs.com/docs/api/query.html
+            var queryWhere = {};
+            var querySort = {};
+            var querySelect = {};
+            var querySkip = 0;
+            var queryLimit = 0;
+            var queryCount = req.query.count;
+
+            try {
+                if (queryWhere) { queryWhere = JSON.parse(req.query.where); }
+                if (querySort) { querySort = JSON.parse(req.query.sort); }
+                if (querySelect) { querySelect = JSON.parse(req.query.select); }
+                if (querySkip) { querySkip = parseInt(req.query.skip); }
+                if (queryLimit) { queryLimit = parseInt(req.query.limit); }
+            }
+            catch (err) {
+                return res.status(400).json({
+                    message: "error in query parameters",
+                    error: "error in query parameters"
+                });
+            }
+
+            if (queryCount) {
+                const countNum = await Task.countDocuments(queryWhere);
+                return res.json({
+                    message: "counted task documents according to where",
+                    data: countNum
+                });
+            }
+
+
+            const tasks = await Task.find(queryWhere).sort(querySort).select(querySelect).skip(querySkip).limit(queryLimit);
             return res.json({ message: "here is a list of tasks", data: tasks });
         }
         catch (err) {
@@ -88,30 +121,6 @@ module.exports = function (router) {
                 });
             }
 
-
-            // chain queries
-            // https://mongoosejs.com/docs/api/query.html
-            // var queryWhere = req.query.where;
-            // var querySort = req.query.sort;
-            // var querySelect = req.query.select;
-            // var querySkip = req.query.skip;
-            // var queryLimit = req.query.limit;
-            // var queryCount = req.query.count;
-
-            // if (queryWhere) { queryWhere = JSON.parse(req.query.where); } else { queryWhere = {}; }
-            // if (querySort) { querySort = JSON.parse(req.query.sort); } else { querySort = {}; }
-            // if (querySelect) { querySelect = JSON.parse(req.query.select); } else { querySelect = {}; }
-            // if (querySkip) { querySkip = parseInt(req.query.skip); } else { querySkip = 0; }
-            // if (queryLimit) { queryLimit = parseInt(req.query.limit); } else { queryLimit = 0; }
-
-            // if (queryCount) {
-            //     const countNum = await Task.countDocuments(queryWhere);
-            //     return res.json({
-            //         message: "counted task documents according to where",
-            //         data: countNum
-            //     });
-            // }
-
             const results = await Task.findById(id).select(querySelect);
 
             if (!results) {
@@ -154,11 +163,11 @@ module.exports = function (router) {
             const newTask = req.body;
 
             // check if user is found
-            if(newTask.assignedUser) {
+            if (newTask.assignedUser) {
                 const queryUser = await User.findById(newTask.assignedUser);
 
                 // if there is no user, 404
-                if(!queryUser){
+                if (!queryUser) {
                     return res.status(404).json({
                         message: "user not found",
                         data: "user not found"
@@ -166,7 +175,7 @@ module.exports = function (router) {
                 }
 
                 // if the user is not the same
-                if(newTask.assignedUserName && newTask.assignedUserName !== queryUser.name) {
+                if (newTask.assignedUserName && newTask.assignedUserName !== queryUser.name) {
                     return res.status(400).json({
                         message: "user is not the same as assigned",
                         data: "user is not the same as assigned"
